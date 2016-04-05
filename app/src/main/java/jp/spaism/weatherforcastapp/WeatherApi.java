@@ -5,8 +5,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,9 +25,8 @@ import java.nio.charset.MalformedInputException;
 /**
  * Created by spaism on 4/5/16.
  */
-public class WeatherApi extends AsyncTask<Void, Void, String>{
+public class WeatherApi extends AsyncTask<Void, Void, WeatherForecast>{
 
-    private static final String USER_AGENT = "WeatherForecasts Sample";
     private static final String BASE_URL = "http://weather.livedoor.com/forecast/webservice/json/v1?city=";
 
     private StringBuilder sb = new StringBuilder();
@@ -37,7 +40,7 @@ public class WeatherApi extends AsyncTask<Void, Void, String>{
     }
 
     @Override
-    protected String doInBackground(Void... params) {
+    protected WeatherForecast doInBackground(Void... params) {
 
         HttpURLConnection connection = null;
         StringBuilder sb = new StringBuilder();
@@ -69,13 +72,40 @@ public class WeatherApi extends AsyncTask<Void, Void, String>{
             e.printStackTrace();
         }
 
-        return sb.toString();
+        Log.v("App-Response", sb.toString());
+
+
+
+        WeatherForecast forecast = null;
+        try{
+            forecast = new WeatherForecast(new JSONObject(sb.toString()));
+        }catch(JSONException e){
+            e.printStackTrace();
+            Log.e("Error:Instance", "JSONException occured here");
+        }
+
+        if(forecast == null){
+            Log.v("App-Variable", "forecast is null");
+        }
+
+        return forecast;
     }
 
     @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-        TextView tv = (TextView)activity.findViewById(R.id.tv_main);
-        tv.setText(s);
+    protected void onPostExecute(WeatherForecast data) {
+        super.onPostExecute(data);
+
+        TextView textView = (TextView) activity.findViewById(R.id.tv_main);
+
+        if(data != null){
+            textView.setText(data.location.area + " " + data.location.prefecture + " " + data.location.city);
+
+            for(WeatherForecast.Forecast forecast : data.forecastList){
+                textView.append("\n");
+                textView.append(forecast.dateLabel + " " + forecast.telop);
+            }
+        }else{
+            Toast.makeText(activity.getApplicationContext(), "Weather data was null", Toast.LENGTH_SHORT).show();
+        }
     }
 }
