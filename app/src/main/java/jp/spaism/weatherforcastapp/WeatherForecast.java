@@ -97,6 +97,28 @@ public class WeatherForecast {
                 }
             }
 
+            @Override
+            public String toString() {
+
+                StringBuffer sb = new StringBuffer();
+
+                if(min.celsius != null){
+                    sb.append(min.celsius);
+                }else{
+                    sb.append(" - ");
+                }
+                sb.append("℃ / ");
+
+                if(max.celsius != null){
+                    sb.append(max.celsius);
+                }else{
+                    sb.append(" - ");
+                }
+                sb.append("℃ / ");
+
+                return sb.toString();
+            }
+
             public class Temp {
                 public final String celsius;
                 public final String fahrenheit;
