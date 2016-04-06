@@ -6,6 +6,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,14 +98,31 @@ public class WeatherApi extends AsyncTask<Void, Void, WeatherForecast>{
     protected void onPostExecute(WeatherForecast data) {
         super.onPostExecute(data);
 
-        TextView textView = (TextView) activity.findViewById(R.id.tv_main);
+        TextView textView = (TextView) activity.findViewById(R.id.tv_location);
 
         if(data != null){
             textView.setText(data.location.area + " " + data.location.prefecture + " " + data.location.city);
 
             for(WeatherForecast.Forecast forecast : data.forecastList){
-                textView.append("\n");
-                textView.append(forecast.dateLabel + " " + forecast.telop);
+                View row = View.inflate(activity.getApplication(), R.layout.forecast_row, null);
+
+                TextView date = (TextView) row.findViewById(R.id.tv_date);
+                date.setText(forecast.dateLabel);
+
+                TextView telop = (TextView) row.findViewById(R.id.tv_telop);
+                telop.setText(forecast.telop);
+
+                TextView temp = (TextView) row.findViewById(R.id.tv_tempreture);
+                temp.setText(forecast.temperature.toString());
+
+                ImageView imageView = (ImageView) row.findViewById(R.id.iv_weather);
+                imageView.setTag(forecast.image.url);
+
+                ImageLoaderTask task = new ImageLoaderTask(activity);
+                task.execute(imageView);
+
+                LinearLayout forecastLayout = (LinearLayout) activity.findViewById(R.id.ll_forecasts);
+                forecastLayout.addView(row);
             }
         }else{
             Toast.makeText(activity.getApplicationContext(), "Weather data was null", Toast.LENGTH_SHORT).show();
