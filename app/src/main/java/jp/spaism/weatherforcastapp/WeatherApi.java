@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,8 @@ public class WeatherApi extends AsyncTask<Void, Void, WeatherForecast>{
     private String pointID;
 
     private Activity activity;
+
+    private ProgressBar progress;
 
     public WeatherApi(Activity activity, String pointID){
         this.activity = activity;
@@ -95,10 +98,19 @@ public class WeatherApi extends AsyncTask<Void, Void, WeatherForecast>{
     }
 
     @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        progress = (ProgressBar) activity.findViewById(R.id.progress);
+        progress.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     protected void onPostExecute(WeatherForecast data) {
         super.onPostExecute(data);
 
         TextView textView = (TextView) activity.findViewById(R.id.tv_location);
+
+        progress.setVisibility(View.GONE);
 
         if(data != null){
             textView.setText(data.location.area + " " + data.location.prefecture + " " + data.location.city);
