@@ -2,8 +2,6 @@ package jp.spaism.weatherforcastapp;
 
 
 import android.app.Activity;
-import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -24,7 +22,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.nio.charset.MalformedInputException;
 
 /**
  * Created by spaism on 4/5/16.
@@ -100,8 +97,10 @@ public class WeatherApi extends AsyncTask<Void, Void, WeatherForecast>{
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progress = (ProgressBar) activity.findViewById(R.id.progress);
-        progress.setVisibility(View.VISIBLE);
+
+        /* ProgressbarがNull Exceptionが発生する */
+//        progress = (ProgressBar) activity.findViewById(R.id.progress);
+//        progress.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -110,7 +109,8 @@ public class WeatherApi extends AsyncTask<Void, Void, WeatherForecast>{
 
         TextView textView = (TextView) activity.findViewById(R.id.tv_location);
 
-        progress.setVisibility(View.GONE);
+        /**/
+//        progress.setVisibility(View.GONE);
 
         if(data != null){
             textView.setText(data.location.area + " " + data.location.prefecture + " " + data.location.city);

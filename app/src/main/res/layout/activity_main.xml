@@ -9,24 +9,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="jp.spaism.weatherforcastapp.MainActivity">
 
-    <TextView
-        android:id="@+id/tv_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="25sp" />
-
-    <LinearLayout
-        android:id="@+id/ll_forecasts"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_location"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical">
-    </LinearLayout>
+        android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+    </android.support.v4.view.ViewPager>
 </RelativeLayout>
